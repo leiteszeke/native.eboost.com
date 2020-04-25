@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
+import LinearGradient from 'react-native-linear-gradient';
+import Button from '../../components/Button';
 import {UserType} from '../../constants';
 
 const Login = ({onAuthSuccess}) => {
@@ -63,132 +65,152 @@ const Login = ({onAuthSuccess}) => {
   const onRegister = () => onAuthSuccess();
 
   return (
-    <SafeAreaView style={styles.wrapper}>
-      <View style={styles.container}>
-        <View style={styles.logoContainer} />
-        <View style={styles.content}>
-          <Animated.View
-            style={[
-              styles.login,
-              {
-                transform: [{translateX: registerLeft}],
-              },
-            ]}>
-            <Text style={styles.title}>Create an Account</Text>
-            <View style={styles.userButtons}>
-              <TouchableOpacity
-                style={[
-                  userType === UserType.FREELANCER
-                    ? styles.button
-                    : styles.buttonDisable,
-                  styles.marginRight,
-                ]}
-                onPress={setType(UserType.FREELANCER)}>
-                <Text
-                  style={
-                    userType === UserType.FREELANCER
-                      ? styles.buttonText
-                      : styles.buttonDisableText
-                  }>
-                  FREELANCER
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  userType === UserType.CLIENT
-                    ? styles.button
-                    : styles.buttonDisable,
-                  styles.marginRight,
-                ]}
-                onPress={setType(UserType.CLIENT)}>
-                <Text
-                  style={
-                    userType === UserType.CLIENT
-                      ? styles.buttonText
-                      : styles.buttonDisableText
-                  }>
-                  PERSON
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.form}>
-              <TextInput
-                style={styles.textInput}
-                placeholderTextColor="gray"
-                placeholder="Full Name"
-                value={data?.name}
-                onChange123={setValue('name')}
+    <LinearGradient
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 0}}
+      colors={['#1e65bc', '#3080bd']}
+      style={styles.wrapper}>
+      <SafeAreaView style={styles.wrapper}>
+        <View style={styles.container}>
+          <View style={styles.logoContainer} />
+          <View style={styles.content}>
+            <Animated.View
+              style={[
+                styles.login,
+                {
+                  transform: [{translateX: registerLeft}],
+                },
+              ]}>
+              <Text style={styles.title}>Create an Account</Text>
+              <View style={styles.userButtons}>
+                <Button
+                  gradient={{
+                    start: {x: 0, y: 0},
+                    end: {x: 1, y: 0},
+                    colors: ['#1e65bc', '#3080bd'],
+                  }}
+                  round
+                  style={styles.marginRight}
+                  onPress={setType(UserType.FREELANCER)}
+                  disabled={userType !== UserType.FREELANCER}
+                  label={UserType.FREELANCER}
+                />
+                <Button
+                  gradient={{
+                    start: {x: 0, y: 0},
+                    end: {x: 1, y: 0},
+                    colors: ['#1e65bc', '#3080bd'],
+                  }}
+                  style={styles.marginLeft}
+                  round
+                  onPress={setType(UserType.CLIENT)}
+                  disabled={userType !== UserType.CLIENT}
+                  label={UserType.CLIENT}
+                />
+              </View>
+              <View style={styles.form}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholderTextColor="gray"
+                  placeholder="Full Name"
+                  value={data?.name}
+                  onChange123={setValue('name')}
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholderTextColor="gray"
+                  placeholder="Email"
+                  value={data?.email}
+                  onChange123={setValue('email')}
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholderTextColor="gray"
+                  placeholder="Password"
+                  value={data?.password}
+                  onChange123={setValue('password')}
+                  secureTextEntry={true}
+                />
+              </View>
+
+              <Button
+                gradient={{
+                  start: {x: 0, y: 0},
+                  end: {x: 1, y: 0},
+                  colors: ['#1e65bc', '#3080bd'],
+                }}
+                style={styles.submitButton}
+                onPress={onRegister}
+                label="SIGN UP"
               />
-              <TextInput
-                style={styles.textInput}
-                placeholderTextColor="gray"
-                placeholder="Email"
-                value={data?.email}
-                onChange123={setValue('email')}
+
+              <View style={styles.footer}>
+                <Text style={styles.footerText}>Already have an account?</Text>
+                <TouchableOpacity onPress={goLogin}>
+                  <Text style={styles.link}>Log In</Text>
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+            <Animated.View
+              style={[styles.register, {transform: [{translateX: loginLeft}]}]}>
+              <Text style={styles.title}>Welcome back!</Text>
+              <View style={styles.form}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholderTextColor="gray"
+                  placeholder="Email"
+                  value={data?.email}
+                  onChange123={setValue('email')}
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholderTextColor="gray"
+                  placeholder="Password"
+                  value={data?.password}
+                  onChange123={setValue('password')}
+                  secureTextEntry={true}
+                />
+              </View>
+
+              <Button
+                gradient={{
+                  start: {x: 0, y: 0},
+                  end: {x: 1, y: 0},
+                  colors: ['#1e65bc', '#3080bd'],
+                }}
+                style={styles.submitButton}
+                onPress={onLogin}
+                label="SIGN IN"
               />
-              <TextInput
-                style={styles.textInput}
-                placeholderTextColor="gray"
-                placeholder="Password"
-                value={data?.password}
-                onChange123={setValue('password')}
-                secureTextEntry={true}
-              />
-            </View>
-            <TouchableOpacity style={styles.submitButton} onPress={onRegister}>
-              <Text style={styles.submitButtonText}>SIGN UP</Text>
-            </TouchableOpacity>
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>Already have an account?</Text>
-              <TouchableOpacity onPress={goLogin}>
-                <Text style={styles.link}>Log In</Text>
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
-          <Animated.View
-            style={[styles.register, {transform: [{translateX: loginLeft}]}]}>
-            <Text style={styles.title}>Welcome back!</Text>
-            <View style={styles.form}>
-              <TextInput
-                style={styles.textInput}
-                placeholderTextColor="gray"
-                placeholder="Email"
-                value={data?.email}
-                onChange123={setValue('email')}
-              />
-              <TextInput
-                style={styles.textInput}
-                placeholderTextColor="gray"
-                placeholder="Password"
-                value={data?.password}
-                onChange123={setValue('password')}
-                secureTextEntry={true}
-              />
-            </View>
-            <TouchableOpacity style={styles.submitButton} onPress={onLogin}>
-              <Text style={styles.submitButtonText}>SIGN IN</Text>
-            </TouchableOpacity>
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>Don't have an account?</Text>
-              <TouchableOpacity onPress={goRegister}>
-                <Text style={styles.link}>Create an account</Text>
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
+
+              <View style={styles.footer}>
+                <Text style={styles.footerText}>Don't have an account?</Text>
+                <TouchableOpacity onPress={goRegister}>
+                  <Text style={styles.link}>Create an account</Text>
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+      <View style={styles.safeAreaBottom} />
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: 'red',
+  },
+  safeAreaBottom: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    bottom: 0,
+    height: 34,
+    width: '100%',
   },
   container: {
     flex: 1,
-    backgroundColor: 'blue',
   },
   logoContainer: {
     flex: 0.4,
@@ -268,18 +290,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   submitButton: {
-    backgroundColor: 'purple',
-    height: 48,
-    fontSize: 18,
-    color: 'black',
     marginBottom: 12,
-    justifyContent: 'center',
     borderRadius: 8,
-  },
-  submitButtonText: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: 'white',
+    width: '100%',
   },
   footer: {
     alignItems: 'center',
