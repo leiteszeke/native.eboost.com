@@ -4,6 +4,7 @@ import {
   Animated,
   Easing,
   View,
+  Alert,
   Text,
   StyleSheet,
   TouchableOpacity,
@@ -12,12 +13,18 @@ import {TextInput} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import Button from '../../components/Button';
 import {UserType} from '../../constants';
+import {useUser} from '../../hooks/User';
+import {parseErrors} from '../../helpers/errors';
+import {LoginUserSchema, RegisterUserSchema} from '../../schemas/User';
 
-const Login = ({onAuthSuccess}) => {
+const Login = () => {
   const loginLeft = React.useRef(new Animated.Value(400)).current;
   const registerLeft = React.useRef(new Animated.Value(0)).current;
+  const [loginData, setLoginData] = React.useState(null);
+  const [registerData, setRegisterData] = React.useState(null);
+  const {onLoginSuccess} = useUser();
   const [userType, setUserType] = React.useState(UserType.FREELANCER);
-  const [data, setData] = React.useState(null);
+  const [errors, setErrors] = React.useState(null);
 
   const goLogin = () => {
     Animated.timing(registerLeft, {
@@ -51,18 +58,66 @@ const Login = ({onAuthSuccess}) => {
     }).start();
   };
 
-  const setValue = (name) => (e) => {
+  const setValue = (name, form) => (e) => {
     e.persist();
 
-    setData((prev) => ({
-      ...prev,
-      [name]: e?.nativeEvent?.text,
-    }));
+    if (form === 'login') {
+      setLoginData((prev) => ({
+        ...prev,
+        [name]: e?.nativeEvent?.text,
+      }));
+    }
+
+    if (form === 'register') {
+      setRegisterData((prev) => ({
+        ...prev,
+        [name]: e?.nativeEvent?.text,
+      }));
+    }
   };
 
   const setType = (type) => () => setUserType(type);
-  const onLogin = () => onAuthSuccess();
-  const onRegister = () => onAuthSuccess();
+
+  const onLogin = async () => {
+    try {
+      setErrors(null);
+
+      await LoginUserSchema.validateSync(loginData || {}, {
+        abortEarly: false,
+      });
+
+      onLoginSuccess(userType);
+    } catch (e) {
+      const parsedErrors = parseErrors(e);
+      setErrors(parsedErrors);
+    }
+  };
+
+  const onRegister = async () => {
+    try {
+      setErrors(null);
+
+      await RegisterUserSchema.validateSync(registerData || {}, {
+        abortEarly: false,
+      });
+
+      onLoginSuccess(userType);
+    } catch (e) {
+      const parsedErrors = parseErrors(e);
+      setErrors(parsedErrors);
+    }
+  };
+
+  React.useEffect(() => {
+    if (errors !== null) {
+      Alert.alert(
+        'Error',
+        Object.entries(errors)
+          .map(([key, value]) => `${value}.`)
+          .join('\r\n'),
+      );
+    }
+  }, [errors]);
 
   return (
     <LinearGradient
@@ -92,7 +147,7 @@ const Login = ({onAuthSuccess}) => {
                   round
                   style={styles.marginRight}
                   onPress={setType(UserType.FREELANCER)}
-                  disabled={userType !== UserType.FREELANCER}
+                  disableStyle={userType !== UserType.FREELANCER}
                   label={UserType.FREELANCER}
                 />
                 <Button
@@ -103,9 +158,9 @@ const Login = ({onAuthSuccess}) => {
                   }}
                   style={styles.marginLeft}
                   round
-                  onPress={setType(UserType.CLIENT)}
-                  disabled={userType !== UserType.CLIENT}
-                  label={UserType.CLIENT}
+                  onPress={setType(UserType.CUSTOMER)}
+                  disableStyle={userType !== UserType.CUSTOMER}
+                  label={UserType.CUSTOMER}
                 />
               </View>
               <View style={styles.form}>
@@ -113,22 +168,25 @@ const Login = ({onAuthSuccess}) => {
                   style={styles.textInput}
                   placeholderTextColor="gray"
                   placeholder="Full Name"
-                  value={data?.name}
-                  onChange123={setValue('name')}
+                  value={registerData?.name}
+                  autoCapitalize="none"
+                  onChange={setValue('name', 'register')}
                 />
                 <TextInput
                   style={styles.textInput}
                   placeholderTextColor="gray"
                   placeholder="Email"
-                  value={data?.email}
-                  onChange123={setValue('email')}
+                  value={registerData?.email}
+                  autoCapitalize="none"
+                  onChange={setValue('email', 'register')}
                 />
                 <TextInput
                   style={styles.textInput}
                   placeholderTextColor="gray"
                   placeholder="Password"
-                  value={data?.password}
-                  onChange123={setValue('password')}
+                  value={registerData?.password}
+                  autoCapitalize="none"
+                  onChange={setValue('password', 'register')}
                   secureTextEntry={true}
                 />
               </View>
@@ -159,15 +217,17 @@ const Login = ({onAuthSuccess}) => {
                   style={styles.textInput}
                   placeholderTextColor="gray"
                   placeholder="Email"
-                  value={data?.email}
-                  onChange123={setValue('email')}
+                  value={loginData?.email}
+                  autoCapitalize="none"
+                  onChange={setValue('email', 'login')}
                 />
                 <TextInput
                   style={styles.textInput}
                   placeholderTextColor="gray"
                   placeholder="Password"
-                  value={data?.password}
-                  onChange123={setValue('password')}
+                  value={loginData?.password}
+                  autoCapitalize="none"
+                  onChange={setValue('password', 'login')}
                   secureTextEntry={true}
                 />
               </View>
@@ -247,35 +307,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  button: {
-    justifyContent: 'center',
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'purple',
-    width: 130,
-  },
   marginLeft: {
     marginLeft: 6,
   },
   marginRight: {
     marginRight: 6,
-  },
-  buttonText: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: 'white',
-  },
-  buttonDisable: {
-    justifyContent: 'center',
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'lightgray',
-    width: 130,
-  },
-  buttonDisableText: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: 'gray',
   },
   form: {
     marginVertical: 20,
@@ -303,7 +339,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   link: {
-    color: 'purple',
+    color: '#1e65bc',
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },

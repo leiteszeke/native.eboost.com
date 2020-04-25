@@ -3,11 +3,15 @@ import {StyleSheet, View} from 'react-native';
 import Layout from '../../../components/Layout';
 import LinearGradient from 'react-native-linear-gradient';
 
-const Schedule = () => {
+const BecomeFreelancer = () => {
   const rightIcon = () => null;
 
   return (
-    <Layout headerTitle="Schedule" rightIcon={rightIcon} withSafeArea={false}>
+    <Layout
+      headerTitle="Become a Freelancer"
+      rightIcon={rightIcon}
+      withSafeArea={false}
+      withBack={true}>
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
@@ -32,7 +36,8 @@ const styles = StyleSheet.create({
     flex: 1,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
+    width: '100%',
   },
 });
 
-export default Schedule;
+export default BecomeFreelancer;

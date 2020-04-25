@@ -3,11 +3,15 @@ import {StyleSheet, View} from 'react-native';
 import Layout from '../../../components/Layout';
 import LinearGradient from 'react-native-linear-gradient';
 
-const Schedule = () => {
+const Library = () => {
   const rightIcon = () => null;
 
   return (
-    <Layout headerTitle="Schedule" rightIcon={rightIcon} withSafeArea={false}>
+    <Layout
+      headerTitle="My Library"
+      rightIcon={rightIcon}
+      withBack={true}
+      withSafeArea={false}>
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
@@ -24,6 +28,10 @@ const styles = StyleSheet.create({
   full: {
     flex: 1,
   },
+  scrollView: {
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
   blank: {
     flex: 0.1,
   },
@@ -32,7 +40,8 @@ const styles = StyleSheet.create({
     flex: 1,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
+    width: '100%',
   },
 });
 
-export default Schedule;
+export default Library;

@@ -27,9 +27,8 @@ const MenuItem = ({label, icon, onPress}) => (
 );
 
 const Profile = () => {
-  const {user} = useUser();
   const {navigate} = useNavigation();
-  const {onLogoutSuccess} = useUser();
+  const {user, onLogoutSuccess} = useUser();
   const navigateTo = (route) => () => navigate(route);
   const alertLogout = () =>
     Alert.alert('Log out', 'Are you sure?', [
@@ -47,12 +46,17 @@ const Profile = () => {
       icon: 'edit',
       onPress: navigateTo('EditProfile'),
     },
-    {id: 2, label: 'My Library', icon: 'book', onPress: navigateTo('Library')},
     {
-      id: 4,
-      label: 'Livestream',
-      icon: 'videocam',
-      onPress: navigateTo('Livestream'),
+      id: 2,
+      label: 'Become a Freelancer',
+      icon: 'business',
+      onPress: navigateTo('BecomeFreelancer'),
+    },
+    {
+      id: 3,
+      label: 'My Membership',
+      icon: 'card-membership',
+      onPress: navigateTo('Membership'),
     },
     {id: 5, label: 'Logout', icon: 'exit-to-app', onPress: alertLogout},
   ];
@@ -74,7 +78,6 @@ const Profile = () => {
             </View>
             <View style={styles.userMeta}>
               <Text style={styles.userName}>{user?.name}</Text>
-              <Text style={styles.userData}>{user?.profession}</Text>
             </View>
           </View>
           <ScrollView style={[styles.full, styles.scrollView]}>

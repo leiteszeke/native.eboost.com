@@ -7,47 +7,112 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {ifIphoneX} from 'react-native-iphone-x-helper';
+
+import {UserProvider} from './src/contexts/User';
+import {navigationRef} from './src/navigator';
 
 import Login from './src/screens/Login';
+import CustomerHome from './src/screens/Customer/Home';
+import CustomerProfile from './src/screens/Customer/Profile';
+import CustomerEditProfile from './src/screens/Customer/EditProfile';
+import CustomerBecomeFreelancer from './src/screens/Customer/BecomeFreelancer';
+import CustomerMembership from './src/screens/Customer/Membership';
+import CustomerPay from './src/screens/Customer/Pay';
+
 import FreelancerHome from './src/screens/Freelancer/Home';
 import FreelancerMembers from './src/screens/Freelancer/Members';
 import FreelancerSchedule from './src/screens/Freelancer/Schedule';
 import FreelancerProfile from './src/screens/Freelancer/Profile';
+import FreelancerEditProfile from './src/screens/Freelancer/EditProfile';
+import FreelancerLibrary from './src/screens/Freelancer/Library';
+import FreelancerLivestream from './src/screens/Freelancer/Livestream';
+import {useUser} from './src/hooks/User';
+import {UserType} from './src/constants';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const FreelancerStack = () => (
-  <Stack.Navigator name="Freelancer" headerMode="none">
-    <Stack.Screen name="Home" component={FreelancerHome} />
-  </Stack.Navigator>
-);
-
-const AppStack = () => (
+const CustomerStack = () => (
   <Tab.Navigator
-    name="App"
+    name="Customer"
     headerMode="none"
     tabBarOptions={{
       activeTintColor: '#1e65bc',
       inactiveTintColor: 'gray',
-      style: {
-        height: 100,
-      },
-      tabStyle: {
-        height: 60,
-      },
+      ...iphoneXTabProps,
     }}>
     <Tab.Screen
-      name="Freelancer"
+      name="Explore"
       options={{
         tabBarLabel: ({color}) => (
-          <Text style={styles.tabBarLabel(color)}>Freelancer</Text>
+          <Text style={styles.tabBarLabel(color)}>Explore</Text>
         ),
         tabBarIcon: ({focused}) => (
           <Icon name="explore" size={28} color={focused ? '#1e65bc' : 'gray'} />
         ),
       }}
-      component={FreelancerStack}
+      component={CustomerHome}
+    />
+    <Tab.Screen
+      name="Profile"
+      options={{
+        tabBarLabel: ({color}) => (
+          <Text style={styles.tabBarLabel(color)}>Profile</Text>
+        ),
+        tabBarIcon: ({focused}) => (
+          <Icon name="person" size={28} color={focused ? '#1e65bc' : 'gray'} />
+        ),
+      }}
+      component={CustomerProfileStack}
+    />
+  </Tab.Navigator>
+);
+
+const iphoneXTabProps = ifIphoneX(
+  {
+    style: {
+      height: 100,
+    },
+    tabStyle: {
+      height: 60,
+    },
+  },
+  {
+    style: {
+      height: 64,
+    },
+    tabStyle: {
+      height: 56,
+      marginTop: 2,
+    },
+  },
+);
+
+const FreelancerStack = () => (
+  <Tab.Navigator
+    name="Freelancer"
+    headerMode="none"
+    tabBarOptions={{
+      activeTintColor: '#1e65bc',
+      inactiveTintColor: 'gray',
+      ...iphoneXTabProps,
+    }}>
+    <Tab.Screen
+      name="Dashboard"
+      options={{
+        tabBarLabel: ({color}) => (
+          <Text style={styles.tabBarLabel(color)}>Dashboard</Text>
+        ),
+        tabBarIcon: ({focused}) => (
+          <Icon
+            name="dashboard"
+            size={28}
+            color={focused ? '#1e65bc' : 'gray'}
+          />
+        ),
+      }}
+      component={FreelancerHome}
     />
     <Tab.Screen
       name="Members"
@@ -87,36 +152,70 @@ const AppStack = () => (
           <Icon name="person" size={28} color={focused ? '#1e65bc' : 'gray'} />
         ),
       }}
-      component={FreelancerProfile}
+      component={FreelancerProfileStack}
     />
   </Tab.Navigator>
 );
 
-const AuthStack = ({onAuthSuccess}) => (
+const CustomerProfileStack = () => (
+  <Stack.Navigator name="CustomerProfileStack" headerMode="none">
+    <Stack.Screen name="Profile" component={CustomerProfile} />
+    <Stack.Screen name="EditProfile" component={CustomerEditProfile} />
+    <Stack.Screen
+      name="BecomeFreelancer"
+      component={CustomerBecomeFreelancer}
+    />
+    <Stack.Screen name="Membership" component={CustomerMembership} />
+    <Stack.Screen name="Pay" component={CustomerPay} />
+  </Stack.Navigator>
+);
+
+const FreelancerProfileStack = () => (
+  <Stack.Navigator name="FreelancerProfileStack" headerMode="none">
+    <Stack.Screen name="Profile" component={FreelancerProfile} />
+    <Stack.Screen name="EditProfile" component={FreelancerEditProfile} />
+    <Stack.Screen name="Library" component={FreelancerLibrary} />
+    <Stack.Screen name="Livestream" component={FreelancerLivestream} />
+  </Stack.Navigator>
+);
+
+const AppStack = ({userType}) => (
+  <Stack.Navigator
+    name="App"
+    headerMode="none"
+    initialRouteName={
+      userType === UserType.CUSTOMER ? 'Customer' : 'Freelancer'
+    }>
+    {userType === UserType.FREELANCER && (
+      <Stack.Screen name="Freelancer" component={FreelancerStack} />
+    )}
+    <Stack.Screen name="Customer" component={CustomerStack} />
+  </Stack.Navigator>
+);
+
+const AuthStack = () => (
   <Stack.Navigator name="Auth" headerMode="none">
-    <Stack.Screen name="Login">
-      {(props) => <Login {...{onAuthSuccess, ...props}} />}
-    </Stack.Screen>
+    <Stack.Screen name="Login" component={Login} />
   </Stack.Navigator>
 );
 
 const AppContainer = () => {
-  const [isLogged, setIsLogged] = React.useState(true);
-
-  const onAuthSuccess = () => setIsLogged(true);
+  const {isLogged, userType} = useUser();
 
   if (isLogged) {
-    return <AppStack />;
+    return <AppStack {...{userType}} />;
   }
 
-  return <AuthStack {...{onAuthSuccess}} />;
+  return <AuthStack />;
 };
 
 const App = () => (
   <SafeAreaProvider>
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <ActionSheetProvider>
-        <AppContainer />
+        <UserProvider>
+          <AppContainer />
+        </UserProvider>
       </ActionSheetProvider>
     </NavigationContainer>
   </SafeAreaProvider>

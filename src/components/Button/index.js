@@ -4,6 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const Button = ({
   disabled,
+  disableStyle,
   gradient = null,
   label,
   onPress,
@@ -11,10 +12,19 @@ const Button = ({
   textStyle,
   style,
 }) => {
+  const handlePress = () => {
+    if (disabled) {
+      return false;
+    }
+
+    onPress();
+  };
+
   if (!gradient || disabled) {
     return (
       <TouchableOpacity
-        onPress={onPress}
+        activeOpacity={0.9}
+        onPress={handlePress}
         style={[
           !disabled ? styles.button : styles.buttonDisable,
           round && styles.buttonRounded,
@@ -31,13 +41,24 @@ const Button = ({
     );
   }
 
+  if (gradient && disableStyle) {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={handlePress}
+        style={[styles.buttonDisable, round && styles.buttonRounded, style]}>
+        <Text style={[styles.buttonDisableText, textStyle]}>{label}</Text>
+      </TouchableOpacity>
+    );
+  }
+
   return (
     <LinearGradient
       start={gradient.start}
       end={gradient.end}
       colors={gradient.colors}
       style={[styles.button, round && styles.buttonRounded, style]}>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={handlePress}>
         <Text style={[styles.buttonText, textStyle]}>{label}</Text>
       </TouchableOpacity>
     </LinearGradient>
@@ -48,7 +69,6 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
     height: 48,
-    backgroundColor: 'purple',
     width: 130,
   },
   buttonRounded: {
