@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import {useUser} from '../../../hooks/User';
 import {UserType} from '../../../constants';
+import DefaultImage from '../../../images/UserDefault.jpg';
 
 const MenuItem = ({label, icon, onPress}) => (
   <TouchableOpacity onPress={onPress} style={styles.menuItem}>
@@ -66,6 +67,9 @@ const Profile = () => {
   const rightIcon = () => null;
 
   const filterType = (item) => !item.type || item.type === user.type;
+  const userImage = user?.profile_pic?.image_url
+    ? {uri: user?.profile_pic?.image_url}
+    : DefaultImage;
 
   return (
     <Layout headerTitle="My Profile" rightIcon={rightIcon} withSafeArea={false}>
@@ -78,10 +82,7 @@ const Profile = () => {
         <View style={styles.content}>
           <View style={styles.userInfo}>
             <View style={styles.imageContainer}>
-              <Image
-                style={styles.userImage}
-                source={{uri: user?.profile_pic?.image_url}}
-              />
+              <Image style={styles.userImage} source={userImage} />
             </View>
             <View style={styles.userMeta}>
               <Text style={styles.userName}>

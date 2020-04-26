@@ -14,6 +14,7 @@ import ImagePicker from 'react-native-image-picker';
 import _ from 'lodash';
 import {useNavigation} from '@react-navigation/native';
 import {useUser} from '../../../hooks/User';
+import DefaultImage from '../../../images/UserDefault.jpg';
 
 const EditProfile = () => {
   const rightIcon = () => null;
@@ -71,6 +72,10 @@ const EditProfile = () => {
     ]);
   };
 
+  const userImage = user?.profile_pic?.image_url
+    ? {uri: user?.profile_pic?.image_url}
+    : DefaultImage;
+
   return (
     <Layout
       headerTitle="Edit Profile"
@@ -88,10 +93,7 @@ const EditProfile = () => {
           <TouchableOpacity
             onPress={onImageSelect}
             style={styles.imageContainer}>
-            <Image
-              style={styles.userImage}
-              source={{uri: data?.profile_pic?.image_url}}
-            />
+            <Image style={styles.userImage} source={userImage} />
           </TouchableOpacity>
           <View style={styles.form}>
             <TextInput
