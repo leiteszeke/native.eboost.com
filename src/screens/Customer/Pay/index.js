@@ -43,7 +43,7 @@ const Pay = () => {
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        colors={['#1e65bc', '#3080bd']}
+        colors={['#0650d4', '#3080bd']}
         style={styles.full}>
         <View style={styles.blank} />
         <ScrollView style={styles.content}>
@@ -63,7 +63,7 @@ const Pay = () => {
           <LinearGradient
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
-            colors={['#1e65bc', '#3080bd']}
+            colors={['#0650d4', '#3080bd']}
             style={styles.gradientButton}>
             <TouchableOpacity style={styles.button} onPress={onPay}>
               {loading ? (

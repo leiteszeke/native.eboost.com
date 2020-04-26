@@ -15,6 +15,13 @@ export const getSession = async () => {
   return JSON.parse(session);
 };
 
+export const updateSession = async (data) => {
+  const session = await getSession();
+  const newSession = {...session, ...data};
+  await setSession(newSession);
+  return newSession;
+};
+
 export const isLogged = async () => {
   const session = await getSession();
   return session;

@@ -81,7 +81,7 @@ const EditProfile = () => {
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        colors={['#1e65bc', '#3080bd']}
+        colors={['#0650d4', '#3080bd']}
         style={styles.full}>
         <View style={styles.blank} />
         <View style={styles.content}>
@@ -126,7 +126,7 @@ const EditProfile = () => {
               gradient={{
                 start: {x: 0, y: 0},
                 end: {x: 1, y: 0},
-                colors: ['#1e65bc', '#3080bd'],
+                colors: ['#0650d4', '#3080bd'],
               }}
               disabled={_.isEqual(data, originalData)}
               onPress={saveChanges}
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 3.84,
     elevation: 5,
-    shadowColor: '#1e65bc',
+    shadowColor: '#0650d4',
     alignItems: 'center',
   },
   userImage: {

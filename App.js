@@ -38,7 +38,7 @@ const CustomerStack = () => (
     name="Customer"
     headerMode="none"
     tabBarOptions={{
-      activeTintColor: '#1e65bc',
+      activeTintColor: '#0650d4',
       inactiveTintColor: 'gray',
       ...iphoneXTabProps,
     }}>
@@ -49,7 +49,7 @@ const CustomerStack = () => (
           <Text style={styles.tabBarLabel(color)}>Explore</Text>
         ),
         tabBarIcon: ({focused}) => (
-          <Icon name="explore" size={28} color={focused ? '#1e65bc' : 'gray'} />
+          <Icon name="explore" size={28} color={focused ? '#0650d4' : 'gray'} />
         ),
       }}
       component={CustomerHome}
@@ -61,7 +61,7 @@ const CustomerStack = () => (
           <Text style={styles.tabBarLabel(color)}>Profile</Text>
         ),
         tabBarIcon: ({focused}) => (
-          <Icon name="person" size={28} color={focused ? '#1e65bc' : 'gray'} />
+          <Icon name="person" size={28} color={focused ? '#0650d4' : 'gray'} />
         ),
       }}
       component={CustomerProfileStack}
@@ -94,7 +94,7 @@ const FreelancerStack = () => (
     name="Freelancer"
     headerMode="none"
     tabBarOptions={{
-      activeTintColor: '#1e65bc',
+      activeTintColor: '#0650d4',
       inactiveTintColor: 'gray',
       ...iphoneXTabProps,
     }}>
@@ -108,7 +108,7 @@ const FreelancerStack = () => (
           <Icon
             name="dashboard"
             size={28}
-            color={focused ? '#1e65bc' : 'gray'}
+            color={focused ? '#0650d4' : 'gray'}
           />
         ),
       }}
@@ -121,7 +121,7 @@ const FreelancerStack = () => (
           <Text style={styles.tabBarLabel(color)}>Members</Text>
         ),
         tabBarIcon: ({focused}) => (
-          <Icon name="people" size={28} color={focused ? '#1e65bc' : 'gray'} />
+          <Icon name="people" size={28} color={focused ? '#0650d4' : 'gray'} />
         ),
       }}
       component={FreelancerMembers}
@@ -136,7 +136,7 @@ const FreelancerStack = () => (
           <Icon
             name="date-range"
             size={28}
-            color={focused ? '#1e65bc' : 'gray'}
+            color={focused ? '#0650d4' : 'gray'}
           />
         ),
       }}
@@ -149,7 +149,7 @@ const FreelancerStack = () => (
           <Text style={styles.tabBarLabel(color)}>Profile</Text>
         ),
         tabBarIcon: ({focused}) => (
-          <Icon name="person" size={28} color={focused ? '#1e65bc' : 'gray'} />
+          <Icon name="person" size={28} color={focused ? '#0650d4' : 'gray'} />
         ),
       }}
       component={FreelancerProfileStack}

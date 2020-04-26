@@ -7,6 +7,7 @@ import {
   Alert,
   Text,
   StyleSheet,
+  Image,
   TouchableOpacity,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
@@ -14,8 +15,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import Button from '../../components/Button';
 import {UserType} from '../../constants';
 import {useUser} from '../../hooks/User';
+import LogoImage from '../../images/logo.png';
 import {parseErrors} from '../../helpers/errors';
 import {LoginUserSchema, RegisterUserSchema} from '../../schemas/User';
+import * as User from '../../services/User';
+import {setSession, updateSession} from '../../helpers/session';
 
 const Login = () => {
   const loginLeft = React.useRef(new Animated.Value(400)).current;
@@ -86,7 +90,13 @@ const Login = () => {
         abortEarly: false,
       });
 
-      onLoginSuccess(userType);
+      User.login(loginData).then(async (res) => {
+        await setSession(res);
+
+        User.get(res.type).then(async (resp) => {
+          await updateSession(resp);
+        });
+      });
     } catch (e) {
       const parsedErrors = parseErrors(e);
       setErrors(parsedErrors);
@@ -101,7 +111,13 @@ const Login = () => {
         abortEarly: false,
       });
 
-      onLoginSuccess(userType);
+      User.register(registerData).then(async (res) => {
+        await setSession(res);
+
+        User.get(res.type).then(async (resp) => {
+          await updateSession(resp);
+        });
+      });
     } catch (e) {
       const parsedErrors = parseErrors(e);
       setErrors(parsedErrors);
@@ -123,11 +139,17 @@ const Login = () => {
     <LinearGradient
       start={{x: 0, y: 0}}
       end={{x: 1, y: 0}}
-      colors={['#1e65bc', '#3080bd']}
+      colors={['#0650d4', '#3080bd']}
       style={styles.wrapper}>
       <SafeAreaView style={styles.wrapper}>
         <View style={styles.container}>
-          <View style={styles.logoContainer} />
+          <View style={styles.logoContainer}>
+            <Image
+              style={styles.logo}
+              resizeMode="contain"
+              source={LogoImage}
+            />
+          </View>
           <View style={styles.content}>
             <Animated.View
               style={[
@@ -142,7 +164,7 @@ const Login = () => {
                   gradient={{
                     start: {x: 0, y: 0},
                     end: {x: 1, y: 0},
-                    colors: ['#1e65bc', '#3080bd'],
+                    colors: ['#0650d4', '#3080bd'],
                   }}
                   round
                   style={styles.marginRight}
@@ -154,7 +176,7 @@ const Login = () => {
                   gradient={{
                     start: {x: 0, y: 0},
                     end: {x: 1, y: 0},
-                    colors: ['#1e65bc', '#3080bd'],
+                    colors: ['#0650d4', '#3080bd'],
                   }}
                   style={styles.marginLeft}
                   round
@@ -168,9 +190,9 @@ const Login = () => {
                   style={styles.textInput}
                   placeholderTextColor="gray"
                   placeholder="Full Name"
-                  value={registerData?.name}
+                  value={registerData?.username}
                   autoCapitalize="none"
-                  onChange={setValue('name', 'register')}
+                  onChange={setValue('username', 'register')}
                 />
                 <TextInput
                   style={styles.textInput}
@@ -195,7 +217,7 @@ const Login = () => {
                 gradient={{
                   start: {x: 0, y: 0},
                   end: {x: 1, y: 0},
-                  colors: ['#1e65bc', '#3080bd'],
+                  colors: ['#0650d4', '#3080bd'],
                 }}
                 style={styles.submitButton}
                 onPress={onRegister}
@@ -236,7 +258,7 @@ const Login = () => {
                 gradient={{
                   start: {x: 0, y: 0},
                   end: {x: 1, y: 0},
-                  colors: ['#1e65bc', '#3080bd'],
+                  colors: ['#0650d4', '#3080bd'],
                 }}
                 style={styles.submitButton}
                 onPress={onLogin}
@@ -273,7 +295,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   logoContainer: {
+    alignItems: 'center',
     flex: 0.4,
+    justifyContent: 'center',
+  },
+  logo: {
+    height: 100,
   },
   content: {
     backgroundColor: 'white',
@@ -339,7 +366,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   link: {
-    color: '#1e65bc',
+    color: '#0650d4',
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },
