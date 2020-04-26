@@ -34,7 +34,9 @@ const CreateSession = () => {
   };
 
   const setDateValue = (name, type) => (e) => {
-    e.persist();
+    if (typeof e.persist === 'function') {
+      e.persist();
+    }
 
     if (Platform.OS !== 'ios') {
       let key = '';
@@ -67,7 +69,11 @@ const CreateSession = () => {
     }
   };
 
-  const saveChanges = () => {};
+  const saveChanges = () => {
+    Alert.alert('Yes!', 'Your session has been created succesfully', [
+      {text: 'OK', onPress: () => goBack()},
+    ]);
+  };
 
   const onBack = () => {
     if (_.isEmpty(data)) {
@@ -224,7 +230,7 @@ const CreateSession = () => {
       {showFromTime && Platform.OS === 'android' && (
         <DateTimePicker
           timeZoneOffsetInMinutes={0}
-          value={new Date(data?.start || now.valueOf())}
+          value={new Date(data?.startTime || now.valueOf())}
           mode="time"
           is24Hour={true}
           style={styles.datePickerElement}
@@ -235,7 +241,7 @@ const CreateSession = () => {
       {showToTime && Platform.OS === 'android' && (
         <DateTimePicker
           timeZoneOffsetInMinutes={0}
-          value={new Date(data?.finish || now.valueOf())}
+          value={new Date(data?.finishTime || now.valueOf())}
           mode="time"
           is24Hour={true}
           style={styles.datePickerElement}

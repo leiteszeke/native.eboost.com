@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
@@ -25,6 +26,7 @@ import {setSession, updateSession} from '../../helpers/session';
 import {keyboardAvoiding} from '../../helpers/utils';
 
 const Login = () => {
+  const [loading, setLoading] = React.useState(false);
   const loginLeft = React.useRef(new Animated.Value(400)).current;
   const registerLeft = React.useRef(new Animated.Value(0)).current;
   const [loginData, setLoginData] = React.useState({
@@ -90,44 +92,56 @@ const Login = () => {
 
   const onLogin = async () => {
     try {
+      setLoading(true);
       setErrors(null);
 
       await LoginUserSchema.validateSync(loginData || {}, {
         abortEarly: false,
       });
 
-      User.login(loginData).then(async (res) => {
-        await setSession(res);
+      User.login(loginData)
+        .then(async (res) => {
+          await setSession(res);
 
-        User.get(res.type).then(async (resp) => {
-          await updateSession(resp);
-          onLoginSuccess(res.type);
-        });
-      });
+          User.get(res.type)
+            .then(async (resp) => {
+              await updateSession(resp);
+              onLoginSuccess(res.type);
+            })
+            .finally(() => setLoading(false));
+        })
+        .finally(() => setLoading(false));
     } catch (e) {
       const parsedErrors = parseErrors(e);
       setErrors(parsedErrors);
+      setLoading(false);
     }
   };
 
   const onRegister = async () => {
     try {
+      setLoading(true);
       setErrors(null);
 
       await RegisterUserSchema.validateSync(registerData || {}, {
         abortEarly: false,
       });
 
-      User.register(registerData).then(async (res) => {
-        await setSession(res);
+      User.register(registerData)
+        .then(async (res) => {
+          await setSession(res);
 
-        User.get(res.type).then(async (resp) => {
-          await updateSession(resp);
-        });
-      });
+          User.get(res.type)
+            .then(async (resp) => {
+              await updateSession(resp);
+            })
+            .finally(() => setLoading(false));
+        })
+        .finally(() => setLoading(false));
     } catch (e) {
       const parsedErrors = parseErrors(e);
       setErrors(parsedErrors);
+      setLoading(false);
     }
   };
 
@@ -295,6 +309,11 @@ const Login = () => {
 
         {Platform.OS === 'ios' && <View style={styles.safeAreaBottom} />}
       </KeyboardAvoidingView>
+      {loading && (
+        <View style={styles.loading}>
+          <ActivityIndicator color="white" style={styles.indicator} />
+        </View>
+      )}
     </LinearGradient>
   );
 };
@@ -302,6 +321,17 @@ const Login = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: '100%',
+    width: '100%',
+  },
+  indicator: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   safeAreaBottom: {
     position: 'absolute',

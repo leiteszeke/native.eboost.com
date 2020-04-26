@@ -1,6 +1,6 @@
 import React from 'react';
 import 'react-native-gesture-handler';
-import {Text} from 'react-native';
+import {Text, View, ActivityIndicator} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -212,7 +212,11 @@ const AppContainer = () => {
   const {isLogged, userType} = useUser();
 
   if (isLogged === null) {
-    return null;
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator color="white" style={styles.indicator} />
+      </View>
+    );
   }
 
   if (isLogged) {
@@ -239,6 +243,17 @@ const styles = {
     color,
     fontSize: 14,
   }),
+  loading: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: '100%',
+    width: '100%',
+  },
+  indicator: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
 };
 
 export default App;
