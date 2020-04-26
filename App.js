@@ -27,6 +27,8 @@ import FreelancerProfile from './src/screens/Freelancer/Profile';
 import FreelancerEditProfile from './src/screens/Freelancer/EditProfile';
 import FreelancerLibrary from './src/screens/Freelancer/Library';
 import FreelancerLivestream from './src/screens/Freelancer/Livestream';
+import FreelancerCreateSession from './src/screens/Freelancer/CreateSession';
+
 import {useUser} from './src/hooks/User';
 import {UserType} from './src/constants';
 
@@ -89,6 +91,13 @@ const iphoneXTabProps = ifIphoneX(
   },
 );
 
+const FreelancerScheduleStack = () => (
+  <Stack.Navigator name="ScheduleStack" headerMode="none">
+    <Stack.Screen name="Schedule" component={FreelancerSchedule} />
+    <Stack.Screen name="CreateSession" component={FreelancerCreateSession} />
+  </Stack.Navigator>
+);
+
 const FreelancerStack = () => (
   <Tab.Navigator
     name="Freelancer"
@@ -140,7 +149,7 @@ const FreelancerStack = () => (
           />
         ),
       }}
-      component={FreelancerSchedule}
+      component={FreelancerScheduleStack}
     />
     <Tab.Screen
       name="Profile"

@@ -5,6 +5,7 @@ import {Text, View, ScrollView, StyleSheet} from 'react-native';
 import dayjs from 'dayjs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Video from '../../../components/Video';
+import {navigate} from '../../../navigator';
 
 const sessions = [
   {
@@ -89,7 +90,12 @@ const Schedule = () => {
   );
 
   const rightIcon = () => (
-    <Icon name="add-circle-outline" size={28} color="white" />
+    <Icon
+      name="add-circle-outline"
+      onPress={() => navigate('CreateSession')}
+      size={28}
+      color="white"
+    />
   );
 
   const filterToday = (session) =>

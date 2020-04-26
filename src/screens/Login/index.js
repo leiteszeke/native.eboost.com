@@ -9,6 +9,8 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,12 +22,13 @@ import {parseErrors} from '../../helpers/errors';
 import {LoginUserSchema, RegisterUserSchema} from '../../schemas/User';
 import * as User from '../../services/User';
 import {setSession, updateSession} from '../../helpers/session';
+import {keyboardAvoiding} from '../../helpers/utils';
 
 const Login = () => {
   const loginLeft = React.useRef(new Animated.Value(400)).current;
   const registerLeft = React.useRef(new Animated.Value(0)).current;
   const [loginData, setLoginData] = React.useState({
-    email: 'test@freelance.com',
+    email: 'freelance@test.com',
     password: 'dGVzdA==',
   });
   const [registerData, setRegisterData] = React.useState(null);
@@ -145,141 +148,153 @@ const Login = () => {
       end={{x: 1, y: 0}}
       colors={['#00A5B8', '#00A5B8']}
       style={styles.wrapper}>
-      <SafeAreaView style={styles.wrapper}>
-        <View style={styles.container}>
-          <View style={styles.logoContainer}>
-            <Image
-              style={styles.logo}
-              resizeMode="contain"
-              source={LogoImage}
-            />
-          </View>
-          <View style={styles.content}>
-            <Animated.View
-              style={[
-                styles.login,
-                {
-                  transform: [{translateX: registerLeft}],
-                },
-              ]}>
-              <Text style={styles.title}>Create an Account</Text>
-              <View style={styles.userButtons}>
+      <KeyboardAvoidingView
+        contentContainerStyle={styles.keyboardContent}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        style={styles.keyboard}
+        {...keyboardAvoiding()}>
+        <SafeAreaView style={styles.wrapper}>
+          <View style={styles.container}>
+            <View style={styles.logoContainer}>
+              <Image
+                style={styles.logo}
+                resizeMode="contain"
+                source={LogoImage}
+              />
+            </View>
+            <View style={styles.content}>
+              <Animated.View
+                style={[
+                  styles.login,
+                  {
+                    transform: [{translateX: registerLeft}],
+                  },
+                ]}>
+                <Text style={styles.title}>Create an Account</Text>
+                <View style={styles.userButtons}>
+                  <Button
+                    gradient={{
+                      start: {x: 0, y: 0},
+                      end: {x: 1, y: 0},
+                      colors: ['#00A5B8', '#00A5B8'],
+                    }}
+                    round
+                    style={styles.marginRight}
+                    onPress={setType(UserType.FREELANCER)}
+                    disableStyle={userType !== UserType.FREELANCER}
+                    label={UserType.FREELANCER}
+                  />
+                  <Button
+                    gradient={{
+                      start: {x: 0, y: 0},
+                      end: {x: 1, y: 0},
+                      colors: ['#00A5B8', '#00A5B8'],
+                    }}
+                    style={styles.marginLeft}
+                    round
+                    onPress={setType(UserType.CUSTOMER)}
+                    disableStyle={userType !== UserType.CUSTOMER}
+                    label={UserType.CUSTOMER}
+                  />
+                </View>
+                <View style={styles.form}>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholderTextColor="gray"
+                    placeholder="Full Name"
+                    value={registerData?.username}
+                    autoCapitalize="none"
+                    onChange={setValue('username', 'register')}
+                  />
+                  <TextInput
+                    style={styles.textInput}
+                    placeholderTextColor="gray"
+                    placeholder="Email"
+                    value={registerData?.email}
+                    autoCapitalize="none"
+                    onChange={setValue('email', 'register')}
+                  />
+                  <TextInput
+                    style={styles.textInput}
+                    placeholderTextColor="gray"
+                    placeholder="Password"
+                    value={registerData?.password}
+                    autoCapitalize="none"
+                    onChange={setValue('password', 'register')}
+                    secureTextEntry={true}
+                  />
+                </View>
+
                 <Button
                   gradient={{
                     start: {x: 0, y: 0},
                     end: {x: 1, y: 0},
                     colors: ['#00A5B8', '#00A5B8'],
                   }}
-                  round
-                  style={styles.marginRight}
-                  onPress={setType(UserType.FREELANCER)}
-                  disableStyle={userType !== UserType.FREELANCER}
-                  label={UserType.FREELANCER}
+                  style={styles.submitButton}
+                  onPress={onRegister}
+                  label="SIGN UP"
                 />
+
+                <View style={styles.footer}>
+                  <Text style={styles.footerText}>
+                    Already have an account?
+                  </Text>
+                  <TouchableOpacity onPress={goLogin}>
+                    <Text style={styles.link}>Log In</Text>
+                  </TouchableOpacity>
+                </View>
+              </Animated.View>
+              <Animated.View
+                style={[
+                  styles.register,
+                  {transform: [{translateX: loginLeft}]},
+                ]}>
+                <Text style={styles.title}>Welcome back!</Text>
+                <View style={styles.form}>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholderTextColor="gray"
+                    placeholder="Email"
+                    value={loginData?.email}
+                    autoCapitalize="none"
+                    onChange={setValue('email', 'login')}
+                  />
+                  <TextInput
+                    style={styles.textInput}
+                    placeholderTextColor="gray"
+                    placeholder="Password"
+                    value={loginData?.password}
+                    autoCapitalize="none"
+                    onChange={setValue('password', 'login')}
+                    secureTextEntry={true}
+                  />
+                </View>
+
                 <Button
                   gradient={{
                     start: {x: 0, y: 0},
                     end: {x: 1, y: 0},
                     colors: ['#00A5B8', '#00A5B8'],
                   }}
-                  style={styles.marginLeft}
-                  round
-                  onPress={setType(UserType.CUSTOMER)}
-                  disableStyle={userType !== UserType.CUSTOMER}
-                  label={UserType.CUSTOMER}
+                  style={styles.submitButton}
+                  onPress={onLogin}
+                  label="SIGN IN"
                 />
-              </View>
-              <View style={styles.form}>
-                <TextInput
-                  style={styles.textInput}
-                  placeholderTextColor="gray"
-                  placeholder="Full Name"
-                  value={registerData?.username}
-                  autoCapitalize="none"
-                  onChange={setValue('username', 'register')}
-                />
-                <TextInput
-                  style={styles.textInput}
-                  placeholderTextColor="gray"
-                  placeholder="Email"
-                  value={registerData?.email}
-                  autoCapitalize="none"
-                  onChange={setValue('email', 'register')}
-                />
-                <TextInput
-                  style={styles.textInput}
-                  placeholderTextColor="gray"
-                  placeholder="Password"
-                  value={registerData?.password}
-                  autoCapitalize="none"
-                  onChange={setValue('password', 'register')}
-                  secureTextEntry={true}
-                />
-              </View>
 
-              <Button
-                gradient={{
-                  start: {x: 0, y: 0},
-                  end: {x: 1, y: 0},
-                  colors: ['#00A5B8', '#00A5B8'],
-                }}
-                style={styles.submitButton}
-                onPress={onRegister}
-                label="SIGN UP"
-              />
-
-              <View style={styles.footer}>
-                <Text style={styles.footerText}>Already have an account?</Text>
-                <TouchableOpacity onPress={goLogin}>
-                  <Text style={styles.link}>Log In</Text>
-                </TouchableOpacity>
-              </View>
-            </Animated.View>
-            <Animated.View
-              style={[styles.register, {transform: [{translateX: loginLeft}]}]}>
-              <Text style={styles.title}>Welcome back!</Text>
-              <View style={styles.form}>
-                <TextInput
-                  style={styles.textInput}
-                  placeholderTextColor="gray"
-                  placeholder="Email"
-                  value={loginData?.email}
-                  autoCapitalize="none"
-                  onChange={setValue('email', 'login')}
-                />
-                <TextInput
-                  style={styles.textInput}
-                  placeholderTextColor="gray"
-                  placeholder="Password"
-                  value={loginData?.password}
-                  autoCapitalize="none"
-                  onChange={setValue('password', 'login')}
-                  secureTextEntry={true}
-                />
-              </View>
-
-              <Button
-                gradient={{
-                  start: {x: 0, y: 0},
-                  end: {x: 1, y: 0},
-                  colors: ['#00A5B8', '#00A5B8'],
-                }}
-                style={styles.submitButton}
-                onPress={onLogin}
-                label="SIGN IN"
-              />
-
-              <View style={styles.footer}>
-                <Text style={styles.footerText}>Don't have an account?</Text>
-                <TouchableOpacity onPress={goRegister}>
-                  <Text style={styles.link}>Create an account</Text>
-                </TouchableOpacity>
-              </View>
-            </Animated.View>
+                <View style={styles.footer}>
+                  <Text style={styles.footerText}>Don't have an account?</Text>
+                  <TouchableOpacity onPress={goRegister}>
+                    <Text style={styles.link}>Create an account</Text>
+                  </TouchableOpacity>
+                </View>
+              </Animated.View>
+            </View>
           </View>
-        </View>
-      </SafeAreaView>
-      <View style={styles.safeAreaBottom} />
+        </SafeAreaView>
+
+        {Platform.OS === 'ios' && <View style={styles.safeAreaBottom} />}
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 };
@@ -302,6 +317,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 0.4,
     justifyContent: 'center',
+  },
+  keyboardContent: {
+    flex: 1,
+    width: '100%',
+  },
+  keyboard: {
+    flex: 1,
   },
   logo: {
     height: 100,
@@ -363,7 +385,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 12,
   },
   footerText: {
     color: 'gray',

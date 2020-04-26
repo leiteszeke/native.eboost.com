@@ -1,13 +1,14 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useActionSheet} from '@expo/react-native-action-sheet';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import {capitalize} from '../../helpers/strings';
 import {UserType} from '../../constants';
 import {useNavigation} from '@react-navigation/native';
 import {useUser} from '../../hooks/User';
+import LogoImage from '../../images/logo.png';
 
 const Layout = ({
   children,
@@ -17,6 +18,7 @@ const Layout = ({
   onBack,
   rightIcon,
   withBack = false,
+  withLogo = false,
   withSafeArea = true,
 }) => {
   const {showActionSheetWithOptions} = useActionSheet();
@@ -71,6 +73,13 @@ const Layout = ({
                   color="white"
                 />
               )}
+              {withLogo && (
+                <Image
+                  resizeMode="contain"
+                  style={styles.headerLogo}
+                  source={LogoImage}
+                />
+              )}
             </TouchableOpacity>
             <TouchableOpacity
               onPress={showUserTypeSelector}
@@ -118,6 +127,13 @@ const styles = StyleSheet.create({
   },
   headerIcon: {
     width: 56,
+  },
+  headerLogo: {
+    height: 40,
+    marginLeft: 16,
+    marginTop: 4,
+    backgroundColor: 'transparent',
+    width: 40,
   },
   headerTitleContainer: {
     flexDirection: 'row',

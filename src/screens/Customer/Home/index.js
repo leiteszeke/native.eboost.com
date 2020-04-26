@@ -24,7 +24,7 @@ const Home = () => {
   const rightIcon = () => null;
 
   return (
-    <Layout withSafeArea={false} rightIcon={rightIcon}>
+    <Layout withSafeArea={false} rightIcon={rightIcon} withLogo>
       <ScrollView style={styles.scroll}>
         <View style={styles.imageList}>
           {images.map((image) => (

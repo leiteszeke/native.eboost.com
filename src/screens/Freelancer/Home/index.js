@@ -86,7 +86,8 @@ const Home = () => {
       <Layout
         withSafeArea={false}
         contentStyle={styles.layout}
-        rightIcon={rightIcon}>
+        rightIcon={rightIcon}
+        withLogo>
         <Text style={styles.day}>{now.format('DD MMMM YYYY')}</Text>
         <ScrollView style={styles.sessions}>
           {sessions.filter(filterToday).map((session) => (
