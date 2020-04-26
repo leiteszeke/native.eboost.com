@@ -67,6 +67,7 @@ const Button = ({
 
 const styles = StyleSheet.create({
   button: {
+    backgroundColor: '#00A5B8',
     justifyContent: 'center',
     height: 48,
     width: 130,

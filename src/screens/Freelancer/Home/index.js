@@ -3,6 +3,7 @@ import {Text, View, ScrollView, StyleSheet} from 'react-native';
 import Layout from '../../../components/Layout';
 import dayjs from 'dayjs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Video from '../../../components/Video';
 
 const sessions = [
   {
@@ -44,50 +45,32 @@ const sessions = [
 ];
 
 const Home = () => {
+  const [showVideo, setShowVideo] = React.useState(false);
   const now = dayjs();
 
   const Session = ({title, start, finish, members, free, video}) => (
-    <View
-      style={{
-        backgroundColor: 'white',
-        padding: 12,
-        borderRadius: 8,
-        marginBottom: 24,
-        shadowColor: 'rgba(0, 0, 0, 0.5)',
-        shadowOffset: {
-          height: 8,
-          width: 0,
-        },
-        marginHorizontal: 16,
-        shadowOpacity: 12,
-        shadowRadius: 5,
-        elevation: 5,
-      }}>
-      <View
-        style={{
-          marginBottom: 10,
-          alignItems: 'center',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+    <View style={styles.sessionContainer}>
+      <View style={styles.sessionHeader}>
+        <Text style={styles.sessionDate}>
           {dayjs(start).format('HH:mm')} - {dayjs(finish).format('HH:mm')}
         </Text>
-        <View style={{alignItems: 'center', flexDirection: 'row'}}>
-          <Text style={{fontSize: 16, marginRight: 4}}>{members}</Text>
+        <View style={styles.sessionFooter}>
+          <Text style={styles.sessionMembers}>{members}</Text>
           <Icon name="person" size={24} />
         </View>
       </View>
-      <View
-        style={{
-          alignItems: 'center',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
-        <Text style={{fontSize: 18}}>{title}</Text>
-        <View style={{alignItems: 'center', flexDirection: 'row'}}>
+      <View style={styles.sessionBody}>
+        <Text style={styles.sessionTitle}>{title}</Text>
+        <View style={styles.sessionInfo}>
           {!free && <Icon name="attach-money" size={24} />}
-          {video && <Icon name="video-call" size={24} color="#00A5B8" />}
+          {video && (
+            <Icon
+              onPress={() => setShowVideo(true)}
+              name="video-call"
+              size={24}
+              color="#00A5B8"
+            />
+          )}
         </View>
       </View>
     </View>
@@ -99,17 +82,24 @@ const Home = () => {
     session.start.includes(now.format('YYYY-MM-DD'));
 
   return (
-    <Layout
-      withSafeArea={false}
-      contentStyle={styles.layout}
-      rightIcon={rightIcon}>
-      <Text style={styles.day}>{now.format('DD MMMM YYYY')}</Text>
-      <ScrollView style={styles.sessions}>
-        {sessions.filter(filterToday).map((session) => (
-          <Session key={session.id} {...session} />
-        ))}
-      </ScrollView>
-    </Layout>
+    <>
+      <Layout
+        withSafeArea={false}
+        contentStyle={styles.layout}
+        rightIcon={rightIcon}>
+        <Text style={styles.day}>{now.format('DD MMMM YYYY')}</Text>
+        <ScrollView style={styles.sessions}>
+          {sessions.filter(filterToday).map((session) => (
+            <Session key={session.id} {...session} />
+          ))}
+        </ScrollView>
+      </Layout>
+      <Video
+        onClose={() => setShowVideo(false)}
+        show={showVideo}
+        url="https://s3-us-west-2.amazonaws.com/static.elevate.com/Zumba.mp4"
+      />
+    </>
   );
 };
 
@@ -117,6 +107,60 @@ const styles = StyleSheet.create({
   layout: {
     backgroundColor: '#f5f5f5',
   },
+
+  sessionContainer: {
+    backgroundColor: 'white',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 24,
+    shadowColor: 'rgba(0, 0, 0, 0.5)',
+    shadowOffset: {
+      height: 8,
+      width: 0,
+    },
+    marginHorizontal: 16,
+    shadowOpacity: 12,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+
+  sessionHeader: {
+    marginBottom: 10,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  sessionDate: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
+  sessionFooter: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+
+  sessionMembers: {
+    fontSize: 16,
+    marginRight: 4,
+  },
+
+  sessionBody: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  sessionTitle: {
+    fontSize: 18,
+  },
+
+  sessionInfo: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+
   day: {
     fontSize: 24,
     fontWeight: 'bold',

@@ -13,6 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import {useUser} from '../../../hooks/User';
+import {UserType} from '../../../constants';
 
 const MenuItem = ({label, icon, onPress}) => (
   <TouchableOpacity onPress={onPress} style={styles.menuItem}>
@@ -50,6 +51,7 @@ const Profile = () => {
       id: 2,
       label: 'Become a Freelancer',
       icon: 'business',
+      type: UserType.CUSTOMER,
       onPress: navigateTo('BecomeFreelancer'),
     },
     {
@@ -62,6 +64,8 @@ const Profile = () => {
   ];
 
   const rightIcon = () => null;
+
+  const filterType = (item) => !item.type || item.type === user.type;
 
   return (
     <Layout headerTitle="My Profile" rightIcon={rightIcon} withSafeArea={false}>
@@ -86,7 +90,7 @@ const Profile = () => {
             </View>
           </View>
           <ScrollView style={[styles.full, styles.scrollView]}>
-            {menuItems.map((item) => (
+            {menuItems.filter(filterType).map((item) => (
               <MenuItem key={item.id} {...item} />
             ))}
           </ScrollView>
