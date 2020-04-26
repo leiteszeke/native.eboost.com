@@ -51,7 +51,7 @@ const EditProfile = () => {
       if (!response.didCancel && !response.error && !response.customButton) {
         setData((prev) => ({
           ...prev,
-          image: response.uri,
+          profile_pic: {image_url: response.uri},
         }));
       }
     });
@@ -81,22 +81,32 @@ const EditProfile = () => {
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        colors={['#0650d4', '#3080bd']}
+        colors={['#00A5B8', '#00A5B8']}
         style={styles.full}>
         <View style={styles.blank} />
         <View style={styles.content}>
           <TouchableOpacity
             onPress={onImageSelect}
             style={styles.imageContainer}>
-            <Image style={styles.userImage} source={{uri: data?.image}} />
+            <Image
+              style={styles.userImage}
+              source={{uri: data?.profile_pic?.image_url}}
+            />
           </TouchableOpacity>
           <View style={styles.form}>
             <TextInput
               style={styles.textInput}
               placeholderTextColor="gray"
-              placeholder="Full Name"
-              value={data?.name}
-              onChange={setValue('name')}
+              placeholder="First Name"
+              value={data?.first_name}
+              onChange={setValue('first_name')}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholderTextColor="gray"
+              placeholder="Last Name"
+              value={data?.last_name}
+              onChange={setValue('last_name')}
             />
             <TextInput
               style={styles.textInput}
@@ -111,7 +121,7 @@ const EditProfile = () => {
               gradient={{
                 start: {x: 0, y: 0},
                 end: {x: 1, y: 0},
-                colors: ['#0650d4', '#3080bd'],
+                colors: ['#00A5B8', '#00A5B8'],
               }}
               disabled={_.isEqual(data, originalData)}
               onPress={saveChanges}
@@ -148,13 +158,17 @@ const styles = StyleSheet.create({
       height: 8,
       width: 0,
     },
+    borderRadius: 50,
+    height: 100,
+    width: 100,
     position: 'relative',
     top: -30,
     shadowOpacity: 0.5,
     shadowRadius: 3.84,
     elevation: 5,
-    shadowColor: '#0650d4',
-    alignItems: 'center',
+    marginLeft: '50%',
+    transform: [{translateX: -50}],
+    shadowColor: '#00A5B8',
   },
   userImage: {
     height: 100,

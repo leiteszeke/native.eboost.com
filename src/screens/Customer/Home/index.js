@@ -21,8 +21,10 @@ const images = [
 ];
 
 const Home = () => {
+  const rightIcon = () => null;
+
   return (
-    <Layout withSafeArea={false}>
+    <Layout withSafeArea={false} rightIcon={rightIcon}>
       <ScrollView style={styles.scroll}>
         <View style={styles.imageList}>
           {images.map((image) => (

@@ -22,7 +22,7 @@ const request = async (initialUrl, params, method = 'GET', config = {}) => {
 
   if (!config.public) {
     const token = await getToken();
-    options.headers.Authentication = token;
+    options.headers.Authorization = `Bearer ${token}`;
   }
 
   if (params) {

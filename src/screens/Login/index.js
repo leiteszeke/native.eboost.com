@@ -24,7 +24,10 @@ import {setSession, updateSession} from '../../helpers/session';
 const Login = () => {
   const loginLeft = React.useRef(new Animated.Value(400)).current;
   const registerLeft = React.useRef(new Animated.Value(0)).current;
-  const [loginData, setLoginData] = React.useState(null);
+  const [loginData, setLoginData] = React.useState({
+    email: 'test@freelance.com',
+    password: 'dGVzdA==',
+  });
   const [registerData, setRegisterData] = React.useState(null);
   const {onLoginSuccess} = useUser();
   const [userType, setUserType] = React.useState(UserType.FREELANCER);
@@ -95,6 +98,7 @@ const Login = () => {
 
         User.get(res.type).then(async (resp) => {
           await updateSession(resp);
+          onLoginSuccess(res.type);
         });
       });
     } catch (e) {
@@ -139,7 +143,7 @@ const Login = () => {
     <LinearGradient
       start={{x: 0, y: 0}}
       end={{x: 1, y: 0}}
-      colors={['#0650d4', '#3080bd']}
+      colors={['#00A5B8', '#00A5B8']}
       style={styles.wrapper}>
       <SafeAreaView style={styles.wrapper}>
         <View style={styles.container}>
@@ -164,7 +168,7 @@ const Login = () => {
                   gradient={{
                     start: {x: 0, y: 0},
                     end: {x: 1, y: 0},
-                    colors: ['#0650d4', '#3080bd'],
+                    colors: ['#00A5B8', '#00A5B8'],
                   }}
                   round
                   style={styles.marginRight}
@@ -176,7 +180,7 @@ const Login = () => {
                   gradient={{
                     start: {x: 0, y: 0},
                     end: {x: 1, y: 0},
-                    colors: ['#0650d4', '#3080bd'],
+                    colors: ['#00A5B8', '#00A5B8'],
                   }}
                   style={styles.marginLeft}
                   round
@@ -217,7 +221,7 @@ const Login = () => {
                 gradient={{
                   start: {x: 0, y: 0},
                   end: {x: 1, y: 0},
-                  colors: ['#0650d4', '#3080bd'],
+                  colors: ['#00A5B8', '#00A5B8'],
                 }}
                 style={styles.submitButton}
                 onPress={onRegister}
@@ -258,7 +262,7 @@ const Login = () => {
                 gradient={{
                   start: {x: 0, y: 0},
                   end: {x: 1, y: 0},
-                  colors: ['#0650d4', '#3080bd'],
+                  colors: ['#00A5B8', '#00A5B8'],
                 }}
                 style={styles.submitButton}
                 onPress={onLogin}
@@ -366,7 +370,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   link: {
-    color: '#0650d4',
+    color: '#00A5B8',
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },

@@ -6,12 +6,20 @@ import {getSession, removeSession} from '../helpers/session';
 export const UserContext = React.createContext();
 
 export const UserProvider = ({children}) => {
-  const [isLogged, setIsLogged] = React.useState(false);
+  const [isLogged, setIsLogged] = React.useState(null);
   const [userType, setUserType] = React.useState(UserType.FREELANCER);
   const [user, setUser] = React.useState(null);
 
   const changeType = (type) => setUserType(type);
+
+  const fetchUser = async () => {
+    const session = await getSession();
+    setUser(session);
+  };
+
   const onLoginSuccess = (type) => {
+    fetchUser();
+
     if (type !== userType) {
       setUserType(type);
     }
@@ -22,9 +30,11 @@ export const UserProvider = ({children}) => {
   const init = async () => {
     const session = await getSession();
 
-    if (session?.session) {
+    if (session) {
       setIsLogged(true);
-      setUser(session.user);
+      setUser(session);
+    } else {
+      setIsLogged(false);
     }
   };
 
@@ -43,17 +53,6 @@ export const UserProvider = ({children}) => {
   React.useEffect(() => {
     init();
   }, []);
-
-  React.useEffect(() => {
-    if (isLogged) {
-      setUser({
-        name: 'John Doe',
-        email: 'john@doe.com',
-        image: 'https://picsum.photos/100/100',
-        profession: 'Martials Arts Instructor',
-      });
-    }
-  }, [isLogged]);
 
   return (
     <UserContext.Provider

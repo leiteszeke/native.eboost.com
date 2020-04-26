@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Layout from '../../../components/Layout';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -15,10 +15,14 @@ const Library = () => {
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        colors={['#0650d4', '#3080bd']}
+        colors={['#00A5B8', '#00A5B8']}
         style={styles.full}>
         <View style={styles.blank} />
-        <View style={styles.content} />
+        <View style={styles.content}>
+          <Text style={styles.noSessions}>
+            You haven't sessions in your library yet.
+          </Text>
+        </View>
       </LinearGradient>
     </Layout>
   );
@@ -35,7 +39,13 @@ const styles = StyleSheet.create({
   blank: {
     flex: 0.1,
   },
+  noSessions: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   content: {
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'white',
     flex: 1,
     borderTopLeftRadius: 24,

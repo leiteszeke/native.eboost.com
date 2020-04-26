@@ -68,16 +68,21 @@ const Profile = () => {
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        colors={['#0650d4', '#3080bd']}
+        colors={['#00A5B8', '#00A5B8']}
         style={styles.full}>
         <View style={styles.blank} />
         <View style={styles.content}>
           <View style={styles.userInfo}>
             <View style={styles.imageContainer}>
-              <Image style={styles.userImage} source={{uri: user?.image}} />
+              <Image
+                style={styles.userImage}
+                source={{uri: user?.profile_pic?.image_url}}
+              />
             </View>
             <View style={styles.userMeta}>
-              <Text style={styles.userName}>{user?.name}</Text>
+              <Text style={styles.userName}>
+                {user?.first_name} {user?.last_name}
+              </Text>
             </View>
           </View>
           <ScrollView style={[styles.full, styles.scrollView]}>
@@ -120,12 +125,13 @@ const styles = StyleSheet.create({
       height: 8,
       width: 0,
     },
+    borderRadius: 50,
     position: 'relative',
     top: -20,
     shadowOpacity: 0.5,
     shadowRadius: 3.84,
     elevation: 5,
-    shadowColor: '#0650d4',
+    shadowColor: '#00A5B8',
   },
   userImage: {
     height: 100,

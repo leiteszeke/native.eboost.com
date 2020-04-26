@@ -15,7 +15,7 @@ const BecomeFreelancer = () => {
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        colors={['#0650d4', '#3080bd']}
+        colors={['#00A5B8', '#00A5B8']}
         style={styles.full}>
         <View style={styles.blank} />
         <View style={styles.content} />

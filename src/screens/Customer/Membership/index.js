@@ -70,7 +70,7 @@ const Memberships = () => {
           <LinearGradient
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
-            colors={['#0650d4', '#3080bd']}
+            colors={['#00A5B8', '#00A5B8']}
             style={styles.planActiveBadge}>
             <Text style={styles.planActiveBadgeText}>ACTIVE</Text>
           </LinearGradient>
@@ -107,7 +107,7 @@ const Memberships = () => {
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        colors={['#0650d4', '#3080bd']}
+        colors={['#00A5B8', '#00A5B8']}
         style={styles.full}>
         <ScrollView style={styles.content}>
           {memberships.map((membership) => (

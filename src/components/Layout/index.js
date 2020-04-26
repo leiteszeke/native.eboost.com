@@ -11,6 +11,7 @@ import {useUser} from '../../hooks/User';
 
 const Layout = ({
   children,
+  contentStyle,
   headerTitle = null,
   hideHeader = false,
   onBack,
@@ -20,7 +21,7 @@ const Layout = ({
 }) => {
   const {showActionSheetWithOptions} = useActionSheet();
   const {goBack} = useNavigation();
-  const {changeType, userType} = useUser();
+  const {changeType, user, userType} = useUser();
 
   const showUserTypeSelector = () => {
     if (headerTitle) {
@@ -56,7 +57,7 @@ const Layout = ({
     <LinearGradient
       start={{x: 0, y: 0}}
       end={{x: 1, y: 0}}
-      colors={['#0650d4', '#3080bd']}
+      colors={['#00A5B8', '#00A5B8']}
       style={styles.wrapper}>
       <SafeAreaView style={styles.safaArea}>
         {!hideHeader && (
@@ -75,7 +76,7 @@ const Layout = ({
               onPress={showUserTypeSelector}
               style={styles.headerTitleContainer}>
               <Text style={styles.headerTitle}>{headerTitle || userType}</Text>
-              {!headerTitle && (
+              {!headerTitle && user?.type === UserType.FREELANCER && (
                 <Icon name="keyboard-arrow-down" size={30} color="white" />
               )}
             </TouchableOpacity>
@@ -88,7 +89,7 @@ const Layout = ({
             </TouchableOpacity>
           </View>
         )}
-        <View style={styles.container}>{children}</View>
+        <View style={[styles.container, contentStyle]}>{children}</View>
       </SafeAreaView>
       {withSafeArea && <View style={styles.safeAreaBottom} />}
     </LinearGradient>
